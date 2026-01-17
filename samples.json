@@ -1,5 +1,5 @@
 {
-  "_base": "",
+  "_base": "https://raw.githubusercontent.com/concordia-dcart/samples-extra/master/",
   "break": [
     "break/Bill_Withers_-_Use_Me_(101_LoopFix) [2019-03-04 124553].wav",
     "break/Blowfly_-_Sesame_Street_(2) [2019-03-04 124553].wav",
