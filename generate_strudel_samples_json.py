@@ -27,24 +27,33 @@ def is_audio_file(path: Path) -> bool:
     return path.is_file() and path.suffix.lower() in AUDIO_EXTS
 
 
-def iter_top_level_dirs(root: Path) -> Iterable[Path]:
-    for entry in sorted(root.iterdir()):
-        if entry.is_dir() and not entry.name.startswith("."):
-            yield entry
+def iter_audio_dirs(root: Path) -> Iterable[Path]:
+    """Yield all non-hidden subdirectories under root, depth-first sorted."""
+    dirs = [
+        path
+        for path in root.rglob("*")
+        if path.is_dir()
+        and not any(part.startswith(".") for part in path.relative_to(root).parts)
+    ]
+    for path in sorted(dirs, key=lambda p: p.relative_to(root).as_posix()):
+        yield path
 
 
 def build_map(root: Path, base: str) -> OrderedDict:
     data: OrderedDict[str, list[str]] = OrderedDict()
     data["_base"] = base
 
-    for top_dir in iter_top_level_dirs(root):
+    for directory in iter_audio_dirs(root):
         files: list[str] = []
-        for path in sorted(top_dir.rglob("*")):
+        for path in sorted(directory.iterdir()):
             if is_audio_file(path):
-                rel_path = path.relative_to(root).as_posix()
+                rel_path = "/" + path.relative_to(root).as_posix()
                 files.append(rel_path)
         if files:
-            data[top_dir.name] = files
+            key = directory.name
+            if key not in data:
+                data[key] = []
+            data[key].extend(files)
     return data
 
 
@@ -72,8 +81,8 @@ def main() -> int:
 
     output_path = Path(args.output)
     with output_path.open("w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=True)
-        f.write("\n")
+        # Compact JSON: single line with no extra spaces to match Strudel example.
+        json.dump(data, f, ensure_ascii=True, separators=(",", ":"))
 
     return 0
 
