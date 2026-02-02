@@ -4,6 +4,11 @@
 README
 Version 1.0 - 12/11/2016, Guildford Travelodge, 01.01am 
 
+Usage (Strudel / web sampler)
+- Requires Python 3. Run from the repo root: `python3 generate_strudel_samples_json.py --root . --base https://your.cdn.example/samples-extra --output strudel.json`.
+- `--base` sets the URL prefix stored under `_base` in the JSON; leave it empty for local file use.
+- The generated `strudel.json` maps each sample folder to its audio files for Strudel or any sampler that reads the same format.
+
 Installation:
 Open SuperCollider, and in main window type 'Quarks.gui' and press Ctrl+Rtn - this should load Quarks. 
 
@@ -23,4 +28,3 @@ Additional production on unreleased tracks by Finlay Shakespeare
 Please email with feedback, horrible criticism and suggestions for the full release version due on Hybrid Vigour late 2016.
 
 bloodsportband@gmail.com
-
